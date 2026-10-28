@@ -1,0 +1,34 @@
+{
+  "name": "google-pixel",
+  "notes": "Pixel 'Lyric' HAL (Tensor). Verified on Pixel 9 / CP3A.261005.005: IsCameraApp1P=1 makes the HAL treat the session as the first-party camera app (is_1p_camera_app=1).",
+  "tagPrefixes": ["com.google.internal.", "com.google.pixel.experimental"],
+  "halLogTags": ["Lyric"],
+  "abFlags": [
+    { "tag": "com.google.internal.IsCameraApp1P", "type": "byte", "value": 1, "label": "1P" }
+  ],
+  "requestExperiments": [
+    { "tag": "com.google.pixel.experimental2017.request.disable_hdrplus", "type": "byte", "value": 1 },
+    { "tag": "com.google.pixel.experimental2017.request.disable_hdrplus", "type": "byte", "value": 0 },
+    { "tag": "com.google.pixel.experimental2016.3a.hybrid_ae_enable", "type": "int", "value": 1 },
+    { "tag": "com.google.pixel.experimental2019.SensorModeFullFov", "type": "byte", "value": 1 },
+    { "tag": "com.google.internal.SensorBinningMode", "type": "byte", "value": 0 },
+    { "tag": "com.google.internal.SensorBinningMode", "type": "byte", "value": 1 },
+    { "tag": "com.google.internal.SensorBinningMode", "type": "byte", "value": 2 },
+    { "tag": "com.google.pixel.experimental2019.HDRNetMode", "type": "int", "value": 1 },
+    { "tag": "com.google.pixel.experimental2019.MeshWarp.Mode", "type": "int", "value": 1 },
+    { "tag": "com.google.pixel.experimental2023.controlAePriorityMode", "type": "int", "value": 1 },
+    { "tag": "com.google.pixel.experimental2025.postProcZoom.targetZoomRatio", "type": "float", "value": 2.0 }
+  ],
+  "resultProbes": [
+    { "tag": "com.google.internal.OisSampleCount", "type": "int" },
+    { "tag": "com.google.internal.OisShiftXDac", "type": "int[]" },
+    { "tag": "com.google.pixel.experimental2021.statsOisShiftDacX", "type": "int[]" },
+    { "tag": "com.google.pixel.experimental2018.AEBGStats", "type": "byte[]" },
+    { "tag": "com.google.pixel.experimental2019.LensShading.Stats", "type": "byte[]" },
+    { "tag": "com.google.pixel.experimental2019.MeshWarp.Data", "type": "float[]" },
+    { "tag": "com.google.pixel.experimental2023.correlatedColorTemperature", "type": "float" },
+    { "tag": "com.google.pixel.experimental2023.AwbSpectralSensor", "type": "float[]" },
+    { "tag": "com.google.pixel.experimental2025.sensorBinningFactor", "type": "byte" },
+    { "tag": "com.google.pixel.experimental2018.faceLandmark.count", "type": "int" }
+  ]
+}

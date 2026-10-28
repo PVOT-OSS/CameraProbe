@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: Saalim Quadri <danascape@gmail.com>
+     SPDX-License-Identifier: Apache-2.0
+-->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!--
+         Optional OEM libraries. A library can only be linked when it is declared here, so every
+         name found by the "libraries" probe on a new device gets added (required="false" keeps
+         the APK installable everywhere).
+    -->
+    <application
+        android:label="Camera Probe"
+        android:theme="@android:style/Theme.DeviceDefault">
+
+        <!-- Google Pixel -->
+        <uses-library android:name="com.google.android.camera.experimental2015" android:required="false" />
+        <uses-library android:name="com.google.android.camera.experimental2016" android:required="false" />
+        <uses-library android:name="com.google.android.camera.experimental2017" android:required="false" />
+        <uses-library android:name="com.google.android.camera.experimental2018" android:required="false" />
+        <uses-library android:name="com.google.android.camera.experimental2019" android:required="false" />
+        <uses-library android:name="com.google.android.camera.experimental2020" android:required="false" />
+        <uses-library android:name="com.google.android.camera.experimental2020_midyear" android:required="false" />
+        <uses-library android:name="com.google.android.camera.experimental2021" android:required="false" />
+        <uses-library android:name="com.google.android.camera.experimental2022" android:required="false" />
+        <uses-library android:name="com.google.android.camera.experimental2023" android:required="false" />
+        <uses-library android:name="com.google.android.camera.experimental2024" android:required="false" />
+        <uses-library android:name="com.google.android.camera.experimental2024_system" android:required="false" />
+        <uses-library android:name="com.google.android.camera.experimental2025" android:required="false" />
+        <uses-library android:name="com.google.android.camera.experimental2026" android:required="false" />
+
+        <!-- CameraX / Camera2 vendor extensions (all OEMs) -->
+        <uses-library android:name="androidx.camera.extensions.impl" android:required="false" />
+
+        <!-- GPU compute (all OEMs) -->
+        <uses-native-library android:name="libOpenCL.so" android:required="false" />
+        <uses-native-library android:name="libOpenCL-pixel.so" android:required="false" />
+        <uses-native-library android:name="libOpenCL-car.so" android:required="false" />
+
+        <!-- Google Tensor -->
+        <uses-native-library android:name="libedgetpu_client.google.so" android:required="false" />
+        <uses-native-library android:name="libedgetpu_tachyon.google.so" android:required="false" />
+        <uses-native-library android:name="libedgetpu_util.so" android:required="false" />
+        <uses-native-library android:name="libedgetpu_litert.so" android:required="false" />
+        <uses-native-library android:name="lib_aion_buffer.so" android:required="false" />
+        <uses-native-library android:name="libgxp.so" android:required="false" />
+        <uses-native-library android:name="lib_jpg_encoder.so" android:required="false" />
+        <uses-native-library android:name="libairbrush-pixel.so" android:required="false" />
+
+        <!-- Qualcomm DSP RPC -->
+        <uses-native-library android:name="libcdsprpc.so" android:required="false" />
+        <uses-native-library android:name="libadsprpc.so" android:required="false" />
+        <uses-native-library android:name="libsdsprpc.so" android:required="false" />
+        <uses-native-library android:name="libqdMetaData.so" android:required="false" />
+
+        <activity
+            android:name=".ProbeActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
