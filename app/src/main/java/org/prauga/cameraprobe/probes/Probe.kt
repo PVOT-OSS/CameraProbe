@@ -15,6 +15,7 @@ interface Probe {
         /** Ordered cheapest/safest first; select a subset with `--es only a,b`. */
         val all: List<Probe> = listOf(
             EnvProbe,
+            CapabilitiesProbe,
             KeysProbe,
             ExtensionsProbe,
             LibrariesProbe,
