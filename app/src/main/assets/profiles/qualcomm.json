@@ -1,6 +1,6 @@
 {
   "name": "qualcomm",
-  "notes": "Qualcomm CamX/CHI HAL (Snapdragon). Prefixes from public HAL sources, not yet verified on a device: run once, then add experiments from keys-*.txt.",
+  "notes": "Qualcomm CamX/CHI HAL (Snapdragon). Prefixes verified on OnePlus Nord N10 5G (SM6350, custom Android 17 on the OnePlus Android 11 vendor): only org.codeaurora.qcamera3 session keys are advertised, but results also carry com.qti.stats*, org.quic.camera2, com.qti.chi and com.oneplus.camera2 tags. No experiments yet: add them from keys-*.txt and vendor-results-*.txt.",
   "tagPrefixes": [
     "org.codeaurora.qcamera3.",
     "org.quic.camera",
