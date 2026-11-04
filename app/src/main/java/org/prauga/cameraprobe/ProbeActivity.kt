@@ -32,6 +32,7 @@ class ProbeActivity : Activity(), ProbeRun.Listener {
     private lateinit var probePage: View
     private lateinit var logScroll: ScrollView
     private lateinit var log: TextView
+    private lateinit var summary: TextView
     private lateinit var run: Button
     private lateinit var probes: Button
     private lateinit var export: Button
@@ -49,6 +50,7 @@ class ProbeActivity : Activity(), ProbeRun.Listener {
         probePage = findViewById(R.id.probePage)
         logScroll = findViewById(R.id.logScroll)
         log = findViewById(R.id.log)
+        summary = findViewById(R.id.summary)
         run = findViewById(R.id.run)
         probes = findViewById(R.id.probes)
         export = findViewById(R.id.export)
@@ -221,11 +223,21 @@ class ProbeActivity : Activity(), ProbeRun.Listener {
         logScroll.post { logScroll.fullScroll(ScrollView.FOCUS_DOWN) }
     }
 
-    override fun onFinished() = updateButtons()
+    override fun onFinished() {
+        updateSummary()
+        updateButtons()
+    }
+
+    private fun updateSummary() {
+        val text = if (ProbeRun.running) null else CameraSummary.of(ProbeRun.resultsDir(this))
+        summary.text = text
+        summary.visibility = if (text != null && logScroll.visibility == View.VISIBLE) View.VISIBLE else View.GONE
+    }
 
     private fun showLog(show: Boolean) {
         logScroll.visibility = if (show) View.VISIBLE else View.GONE
         probePage.visibility = if (show) View.GONE else View.VISIBLE
+        updateSummary()
         updateButtons()
     }
 

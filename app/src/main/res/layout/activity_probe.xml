@@ -77,6 +77,18 @@
         </ScrollView>
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/panel"
+        android:fontFamily="monospace"
+        android:padding="12dp"
+        android:textAppearance="@android:style/TextAppearance.Material.Body1"
+        android:textSize="11sp"
+        android:visibility="gone" />
+
     <ScrollView
         android:id="@+id/logScroll"
         android:layout_width="match_parent"
