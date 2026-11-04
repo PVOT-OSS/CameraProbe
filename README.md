@@ -17,7 +17,21 @@ It runs as a normal `untrusted_app` with only the CAMERA permission, so every re
 Play/F-Droid camera app could do on that device. Pure Camera2, no dependencies, Android 9 (API 28)
 and newer. Probes that need a newer API report themselves as skipped.
 
-## Run
+## Run on the phone
+
+No computer needed, so anyone can run it on their own device:
+1. Install the APK and open **Camera Probe**.
+2. Choose the probes (all are selected by default; the ones that open the camera say so) and tap
+   **Run**. Allow the camera permission when asked.
+3. When the log ends with `DONE`, a summary lists every camera with its hardware level and
+   processing tier (see `capabilities` below).
+4. Tap **Export** to save the results as a zip (pick any folder, e.g. Downloads or a cloud drive),
+   or **Share** to send the zip straight to a chat, mail or drive app.
+
+The zip holds the same files as a host run, minus captured photos. `hal-log.txt` and
+`dumpsys-media.camera.txt` need adb, so only host runs have them.
+
+## Run from a computer
 
 Connect one device over adb, then:
 
@@ -33,6 +47,7 @@ scripts/run.sh --images                                # also keep the captured 
 **What a run contains:**
 - `report.txt`, the main report
 - `run.json`, the device identity
+- `capabilities.json`: every camera's capabilities and tier, for comparing devices
 - `props.txt`
 - per-camera `keys-<id>.txt`, `vendor-keys.txt`, `shared-libraries.txt` and `public-native-libraries.txt`
 - `vendor-results-*.txt`
@@ -49,6 +64,7 @@ during the run.
 | probe | finds out |
 |---|---|
 | `env` | device, SoC, build, camera-related system properties, cameras (logical and physical), hardware level, capabilities, vendor key families, active profiles |
+| `capabilities` | per logical and physical camera, from the characteristics alone: hardware level, capabilities, sensor and lens data, 3A/NR/edge/stabilisation modes, formats with their max size and fps, high-speed video, 10-bit/stream-use-case/colour-space support. Also the processing tier: **A** = RAW + manual + full-res burst ≥ 20 fps with noise profile, shading map and REALTIME timestamps; **B** = full-res YUV burst ≥ 10 fps; **C** = single frame |
 | `keys` | every characteristics, request, result, session and physical-request key per camera; vendor characteristic values; the HAL's default value of every vendor request key per template |
 | `extensions` | the OEM extensions (Night/HDR/Bokeh/…) offered through Camera2, with sizes, keys, postview and progress |
 | `libraries` | all shared libraries the ROM declares (discovery), the ones linked into us, the public native libraries, whether each declared native library loads, and which accelerator/codec device nodes we can open |
@@ -67,8 +83,11 @@ during the run.
 2. **Libraries:** add the interesting names to `AndroidManifest.xml` as `<uses-library>` or
    `<uses-native-library>` with `required="false"`. A library can only be linked once it is declared,
    and `required="false"` keeps the APK installable everywhere.
-3. **Vendor tags:** add a profile `app/src/main/assets/profiles/<oem>.json`. Copy
-   `google-pixel.json` as the template.
+3. **Vendor tags:** profiles already exist for Google Pixel, Qualcomm, MediaTek, Samsung, Unisoc,
+   Oppo/OnePlus/Realme, Vivo/iQOO, Xiaomi, Asus, Motorola, Sony and Huawei/Honor. Only the Pixel
+   profile is verified and has experiments; the others only recognise the vendor tag families until
+   a run on a real device fills them in. To add or extend one, edit
+   `app/src/main/assets/profiles/<oem>.json`, using `google-pixel.json` as the template.
    - `tagPrefixes` decides when the profile is active.
    - `halLogTags` lists which logcat tags the host script keeps.
    - The rest are `abFlags`, `requestExperiments` and `resultProbes`.
@@ -81,7 +100,8 @@ during the run.
   reprocess input aborted the Pixel 9 camera provider (SIGABRT, recovered after about 2 s). New
   risky probes must be opt-in.
 - **Captured photos and full logcats can show the user's surroundings and other apps.** They are
-  not collected unless `--images` is given, and `hal-log.txt` is filtered.
+  not collected unless `--images` is given, are never put in an exported or shared zip, and
+  `hal-log.txt` is filtered.
 
 ## License
 
