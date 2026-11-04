@@ -1,0 +1,8 @@
+{
+  "name": "sony",
+  "notes": "Sony Xperia. Not yet verified on a device.",
+  "tagPrefixes": [
+    "com.sonymobile.",
+    "com.sony."
+  ]
+}

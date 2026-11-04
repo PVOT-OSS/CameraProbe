@@ -1,0 +1,13 @@
+{
+  "name": "qualcomm",
+  "notes": "Qualcomm CamX/CHI HAL (Snapdragon). Prefixes from public HAL sources, not yet verified on a device: run once, then add experiments from keys-*.txt.",
+  "tagPrefixes": [
+    "org.codeaurora.qcamera3.",
+    "org.quic.camera",
+    "com.qti."
+  ],
+  "halLogTags": [
+    "CamX",
+    "CHIUSECASE"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "huawei-honor",
+  "notes": "Huawei and Honor. Not yet verified on a device.",
+  "tagPrefixes": [
+    "com.huawei.",
+    "com.hihonor."
+  ]
+}

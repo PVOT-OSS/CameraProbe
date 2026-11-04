@@ -1,0 +1,7 @@
+{
+  "name": "asus",
+  "notes": "Asus (Zenfone/ROG). Not yet verified on a device.",
+  "tagPrefixes": [
+    "com.asus."
+  ]
+}

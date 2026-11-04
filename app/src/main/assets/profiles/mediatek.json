@@ -1,0 +1,10 @@
+{
+  "name": "mediatek",
+  "notes": "MediaTek HAL3 (Dimensity/Helio). Prefixes from public HAL sources, not yet verified on a device.",
+  "tagPrefixes": [
+    "com.mediatek."
+  ],
+  "halLogTags": [
+    "MtkCam"
+  ]
+}

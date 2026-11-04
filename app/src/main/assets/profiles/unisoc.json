@@ -1,0 +1,8 @@
+{
+  "name": "unisoc",
+  "notes": "Unisoc/Spreadtrum HAL. Not yet verified on a device.",
+  "tagPrefixes": [
+    "com.unisoc.",
+    "com.sprd."
+  ]
+}

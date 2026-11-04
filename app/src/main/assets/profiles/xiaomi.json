@@ -1,0 +1,8 @@
+{
+  "name": "xiaomi",
+  "notes": "Xiaomi, Redmi and Poco (MIUI/HyperOS). Not yet verified on a device.",
+  "tagPrefixes": [
+    "xiaomi.",
+    "com.xiaomi."
+  ]
+}

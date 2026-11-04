@@ -1,0 +1,9 @@
+{
+  "name": "oplus",
+  "notes": "Oppo, OnePlus and Realme (OPlus camera stack). Not yet verified on a device.",
+  "tagPrefixes": [
+    "com.oplus.",
+    "com.oppo.",
+    "com.oneplus."
+  ]
+}

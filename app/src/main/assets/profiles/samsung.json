@@ -1,0 +1,7 @@
+{
+  "name": "samsung",
+  "notes": "Samsung camera HAL (Exynos and Snapdragon Galaxy). Not yet verified on a device.",
+  "tagPrefixes": [
+    "samsung.android."
+  ]
+}

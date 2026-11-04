@@ -1,0 +1,8 @@
+{
+  "name": "vivo",
+  "notes": "Vivo and iQOO. Not yet verified on a device.",
+  "tagPrefixes": [
+    "com.vivo.",
+    "vivo."
+  ]
+}

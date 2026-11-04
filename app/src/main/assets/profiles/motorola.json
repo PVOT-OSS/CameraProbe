@@ -1,0 +1,7 @@
+{
+  "name": "motorola",
+  "notes": "Motorola. Not yet verified on a device.",
+  "tagPrefixes": [
+    "com.motorola."
+  ]
+}
