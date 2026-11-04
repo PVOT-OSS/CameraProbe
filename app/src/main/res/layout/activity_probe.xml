@@ -26,19 +26,56 @@
         android:textAppearance="@android:style/TextAppearance.Material.Body1"
         android:textColor="@color/on_surface_variant" />
 
-    <ScrollView
-        android:id="@+id/probeScroll"
+    <LinearLayout
+        android:id="@+id/probePage"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/probeList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
-    </ScrollView>
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/probes"
+                android:textAppearance="@android:style/TextAppearance.Material.Title" />
+
+            <Button
+                android:id="@+id/selectAll"
+                style="@android:style/Widget.Material.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/select_all" />
+
+            <Button
+                android:id="@+id/selectNone"
+                style="@android:style/Widget.Material.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/select_none" />
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/probeScroll"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:id="@+id/probeList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/logScroll"

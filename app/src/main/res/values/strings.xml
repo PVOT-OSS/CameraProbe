@@ -9,7 +9,9 @@
     <string name="run">Run</string>
     <string name="running">Running…</string>
     <string name="probes">Probes</string>
-    <string name="opens_camera">opens the camera</string>
+    <string name="opens_camera">Opens the camera</string>
+    <string name="select_all">All</string>
+    <string name="select_none">None</string>
     <string name="no_probe_selected">Select at least one probe.</string>
     <string name="export">Export</string>
     <string name="exported">Results exported</string>

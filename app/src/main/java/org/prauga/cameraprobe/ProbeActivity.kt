@@ -29,7 +29,7 @@ import java.io.File
  * From a host: `am start -n org.prauga.cameraprobe/.ProbeActivity --ez autorun true [--es only env,vendor,zoom]`
  */
 class ProbeActivity : Activity(), ProbeRun.Listener {
-    private lateinit var probeScroll: ScrollView
+    private lateinit var probePage: View
     private lateinit var logScroll: ScrollView
     private lateinit var log: TextView
     private lateinit var run: Button
@@ -46,7 +46,7 @@ class ProbeActivity : Activity(), ProbeRun.Listener {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setContentView(R.layout.activity_probe)
         drawEdgeToEdge(findViewById(R.id.root))
-        probeScroll = findViewById(R.id.probeScroll)
+        probePage = findViewById(R.id.probePage)
         logScroll = findViewById(R.id.logScroll)
         log = findViewById(R.id.log)
         run = findViewById(R.id.run)
@@ -62,17 +62,20 @@ class ProbeActivity : Activity(), ProbeRun.Listener {
         val list = findViewById<LinearLayout>(R.id.probeList)
         val selected = prefs.getStringSet(KEY_SELECTED, null)
         for (probe in Probe.all) {
-            val box = CheckBox(this).apply {
-                text = buildString {
-                    append(probe.name).append('\n').append(probe.summary)
-                    if (probe.opensCamera) append(" (").append(getString(R.string.opens_camera)).append(')')
-                }
+            val row = layoutInflater.inflate(R.layout.item_probe, list, false)
+            row.findViewById<TextView>(R.id.name).text = probe.name
+            row.findViewById<TextView>(R.id.summary).text = probe.summary
+            row.findViewById<View>(R.id.opensCamera).visibility = if (probe.opensCamera) View.VISIBLE else View.GONE
+            val box = row.findViewById<CheckBox>(R.id.check).apply {
                 isChecked = selected?.contains(probe.name) ?: true
                 setOnCheckedChangeListener { _, _ -> saveSelection() }
             }
+            row.setOnClickListener { box.toggle() }
             boxes[probe.name] = box
-            list.addView(box)
+            list.addView(row)
         }
+        findViewById<View>(R.id.selectAll).setOnClickListener { boxes.values.forEach { it.isChecked = true } }
+        findViewById<View>(R.id.selectNone).setOnClickListener { boxes.values.forEach { it.isChecked = false } }
 
         run.setOnClickListener { requestRun(Probe.all.filter { boxes[it.name]?.isChecked == true }) }
         probes.setOnClickListener { showLog(false) }
@@ -222,7 +225,7 @@ class ProbeActivity : Activity(), ProbeRun.Listener {
 
     private fun showLog(show: Boolean) {
         logScroll.visibility = if (show) View.VISIBLE else View.GONE
-        probeScroll.visibility = if (show) View.GONE else View.VISIBLE
+        probePage.visibility = if (show) View.GONE else View.VISIBLE
         updateButtons()
     }
 
