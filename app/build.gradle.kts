@@ -19,8 +19,8 @@ android {
         // Android 9: SessionConfiguration, physical cameras and session keys all exist from here.
         minSdk = 28
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
     }
 
     compileOptions {
