@@ -16,6 +16,7 @@ import org.prauga.cameraprobe.Report
  */
 object KeysProbe : Probe {
     override val name = "keys"
+    override val summary = "Every metadata key, vendor values and template defaults"
 
     private val TEMPLATES = listOf(
         CameraDevice.TEMPLATE_PREVIEW to "PREVIEW",

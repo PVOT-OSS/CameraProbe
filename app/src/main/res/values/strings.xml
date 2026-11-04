@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: Saalim Quadri <danascape@gmail.com>
+     SPDX-License-Identifier: Apache-2.0
+-->
+
+<resources>
+    <string name="app_name">Camera Probe</string>
+    <string name="run">Run</string>
+    <string name="running">Running…</string>
+    <string name="probes">Probes</string>
+    <string name="opens_camera">opens the camera</string>
+    <string name="no_probe_selected">Select at least one probe.</string>
+    <string name="permission_needed">The camera permission is needed to probe the cameras.</string>
+</resources>

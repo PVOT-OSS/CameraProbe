@@ -21,6 +21,7 @@ import org.prauga.cameraprobe.ProbeContext
  */
 object ReprocessProbe : Probe {
     override val name = "reprocess"
+    override val summary = "Advertised reprocessing inputs and ZSL"
 
     override fun run(p: ProbeContext) {
         val r = p.r

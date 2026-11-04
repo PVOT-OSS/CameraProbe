@@ -12,6 +12,8 @@ import org.prauga.cameraprobe.ProbeContext
 /** OEM extensions (Night/HDR/Bokeh/...) exposed through Camera2 CameraExtensionCharacteristics. */
 object ExtensionsProbe : Probe {
     override val name = "extensions"
+    override val summary = "OEM extensions offered through Camera2 (Night, HDR, Bokeh)"
+    override val opensCamera = false
 
     private fun extName(ext: Int) = when (ext) {
         0 -> "AUTOMATIC"

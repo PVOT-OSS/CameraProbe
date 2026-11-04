@@ -12,6 +12,8 @@ import org.prauga.cameraprobe.ProbeContext
 /** Who the device is, which camera props it sets, which cameras exist and which profiles apply. */
 object EnvProbe : Probe {
     override val name = "env"
+    override val summary = "Device, build, cameras and the active vendor profiles"
+    override val opensCamera = false
 
     private val PROP_FILTER = Regex("camera|lyric|gcam|isp|soc|board|hardware|platform|chipname|vendor\\.build|product\\.(model|device|brand|manufacturer)", RegexOption.IGNORE_CASE)
 

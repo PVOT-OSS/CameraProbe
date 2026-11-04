@@ -9,6 +9,8 @@ import org.prauga.cameraprobe.ProbeContext
 
 interface Probe {
     val name: String
+    val summary: String
+    val opensCamera: Boolean get() = true
     fun run(p: ProbeContext)
 
     companion object {

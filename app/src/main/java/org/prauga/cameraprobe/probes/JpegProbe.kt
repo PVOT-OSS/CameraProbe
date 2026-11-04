@@ -11,6 +11,7 @@ import org.prauga.cameraprobe.ProbeContext
 /** Real full-size JPEG latency per camera, to compare against the advertised stall durations. */
 object JpegProbe : Probe {
     override val name = "jpeg"
+    override val summary = "Full-size JPEG capture latency"
 
     override fun run(p: ProbeContext) {
         p.r.section(name)

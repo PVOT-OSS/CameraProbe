@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit
  */
 object StreamsProbe : Probe {
     override val name = "streams"
+    override val summary = "Which formats, lenses and depth streams really deliver"
 
     class Out(
         val w: Int,

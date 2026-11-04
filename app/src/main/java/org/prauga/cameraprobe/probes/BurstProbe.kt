@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit
  */
 object BurstProbe : Probe {
     override val name = "burst"
+    override val summary = "Full-resolution RAW burst speed and calibration metadata"
     private const val FRAMES = 30
 
     override fun run(p: ProbeContext) {

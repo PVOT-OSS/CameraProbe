@@ -24,6 +24,7 @@ import org.prauga.cameraprobe.profile.Profile
  */
 object VendorProbe : Probe {
     override val name = "vendor"
+    override val summary = "Vendor tag experiments from the active profiles"
 
     override fun run(p: ProbeContext) {
         val r = p.r

@@ -27,6 +27,7 @@ import kotlin.math.ln
  */
 object ZoomProbe : Probe {
     override val name = "zoom"
+    override val summary = "Which lens is active at each zoom ratio"
     private const val STEPS = 60
 
     override fun run(p: ProbeContext) {

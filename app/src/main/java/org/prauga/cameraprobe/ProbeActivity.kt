@@ -7,94 +7,147 @@ package org.prauga.cameraprobe
 
 import android.Manifest
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.view.WindowManager
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
-import org.json.JSONObject
+import android.widget.Toast
 import org.prauga.cameraprobe.probes.Probe
-import java.io.File
 
 /**
- * Runs the probes on launch and writes everything to
- * /sdcard/Android/data/org.prauga.cameraprobe/files/latest/ (pulled by scripts/run.sh).
- * `am start -n org.prauga.cameraprobe/.ProbeActivity --es only env,vendor,zoom`
+ * Pick the probes and run them; the run itself lives in [ProbeRun].
+ * From a host: `am start -n org.prauga.cameraprobe/.ProbeActivity --ez autorun true [--es only env,vendor,zoom]`
  */
-class ProbeActivity : Activity() {
-    private lateinit var text: TextView
-    private lateinit var scroll: ScrollView
+class ProbeActivity : Activity(), ProbeRun.Listener {
+    private lateinit var probeScroll: ScrollView
+    private lateinit var logScroll: ScrollView
+    private lateinit var log: TextView
+    private lateinit var run: Button
+    private lateinit var probes: Button
+    private val boxes = mutableMapOf<String, CheckBox>()
+    private var pending: List<Probe> = emptyList()
+
+    private val prefs by lazy { getSharedPreferences("probe", MODE_PRIVATE) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        text = TextView(this).apply {
-            textSize = 10f
-            setTextIsSelectable(true)
-        }
-        scroll = ScrollView(this).apply { addView(text) }
-        setContentView(scroll)
+        setContentView(R.layout.activity_probe)
+        probeScroll = findViewById(R.id.probeScroll)
+        logScroll = findViewById(R.id.logScroll)
+        log = findViewById(R.id.log)
+        run = findViewById(R.id.run)
+        probes = findViewById(R.id.probes)
 
+        findViewById<TextView>(R.id.device).text = buildString {
+            append("${Build.MANUFACTURER} ${Build.MODEL} (${Build.DEVICE}), Android ${Build.VERSION.RELEASE} / API ${Build.VERSION.SDK_INT}")
+            if (Build.VERSION.SDK_INT >= 31) append("\n${Build.SOC_MANUFACTURER} ${Build.SOC_MODEL}")
+        }
+
+        val list = findViewById<LinearLayout>(R.id.probeList)
+        val selected = prefs.getStringSet(KEY_SELECTED, null)
+        for (probe in Probe.all) {
+            val box = CheckBox(this).apply {
+                text = buildString {
+                    append(probe.name).append('\n').append(probe.summary)
+                    if (probe.opensCamera) append(" (").append(getString(R.string.opens_camera)).append(')')
+                }
+                isChecked = selected?.contains(probe.name) ?: true
+                setOnCheckedChangeListener { _, _ -> saveSelection() }
+            }
+            boxes[probe.name] = box
+            list.addView(box)
+        }
+
+        run.setOnClickListener { requestRun(Probe.all.filter { boxes[it.name]?.isChecked == true }) }
+        probes.setOnClickListener { showLog(false) }
+
+        ProbeRun.listener = this
+        if (ProbeRun.running || ProbeRun.hasResults(this)) {
+            log.text = ProbeRun.lines(this).joinToString("\n", postfix = "\n")
+            showLog(true)
+        }
+        updateButtons()
+
+        if (savedInstanceState == null) autorun(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        autorun(intent)
+    }
+
+    private fun autorun(intent: Intent) {
+        val only = intent.getStringExtra("only")?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() }?.toSet()
+        if (only != null || intent.getBooleanExtra("autorun", false)) {
+            requestRun(Probe.all.filter { only == null || it.name in only })
+        }
+    }
+
+    override fun onDestroy() {
+        if (ProbeRun.listener === this) ProbeRun.listener = null
+        super.onDestroy()
+    }
+
+    private fun saveSelection() {
+        prefs.edit().putStringSet(KEY_SELECTED, boxes.filterValues { it.isChecked }.keys).apply()
+    }
+
+    private fun requestRun(chosen: List<Probe>) {
+        if (ProbeRun.running) return
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            pending = chosen
             requestPermissions(arrayOf(Manifest.permission.CAMERA), REQUEST_CAMERA)
             return
         }
-        startRun()
+        if (chosen.isEmpty()) {
+            Toast.makeText(this, R.string.no_probe_selected, Toast.LENGTH_SHORT).show()
+            return
+        }
+        log.text = ""
+        showLog(true)
+        ProbeRun.start(this, chosen)
+        updateButtons()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (requestCode != REQUEST_CAMERA) return
         if (grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
-            startRun()
+            requestRun(pending)
         } else {
-            text.append("The camera permission is needed to probe the cameras.\n")
+            Toast.makeText(this, R.string.permission_needed, Toast.LENGTH_LONG).show()
         }
     }
 
-    private fun startRun() {
-        val dir = File(getExternalFilesDir(null), "latest").apply {
-            deleteRecursively()
-            mkdirs()
-        }
-        val report = Report(dir) { line ->
-            runOnUiThread {
-                text.append(line + "\n")
-                scroll.post { scroll.fullScroll(ScrollView.FOCUS_DOWN) }
-            }
-        }
+    override fun onLine(line: String) {
+        log.append(line + "\n")
+        logScroll.post { logScroll.fullScroll(ScrollView.FOCUS_DOWN) }
+    }
 
-        val only = intent.getStringExtra("only")?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() }?.toSet()
-        Thread {
-            val p = ProbeContext(this, report)
-            writeRunInfo(dir, p, only)
-            for (probe in Probe.all) {
-                if (only != null && probe.name !in only) continue
-                report.guard("probe ${probe.name}") { probe.run(p) }
-            }
-            p.close()
-            report.line("DONE")
-        }.start()
+    override fun onFinished() = updateButtons()
+
+    private fun showLog(show: Boolean) {
+        logScroll.visibility = if (show) View.VISIBLE else View.GONE
+        probeScroll.visibility = if (show) View.GONE else View.VISIBLE
+        updateButtons()
+    }
+
+    private fun updateButtons() {
+        val running = ProbeRun.running
+        run.isEnabled = !running
+        run.setText(if (running) R.string.running else R.string.run)
+        probes.isEnabled = !running && logScroll.visibility == View.VISIBLE
     }
 
     companion object {
         private const val REQUEST_CAMERA = 1
-    }
-
-    /** Machine-readable run identity: the host script names the result folder from it. */
-    private fun writeRunInfo(dir: File, p: ProbeContext, only: Set<String>?) {
-        val info = JSONObject()
-            .put("manufacturer", Build.MANUFACTURER)
-            .put("brand", Build.BRAND)
-            .put("model", Build.MODEL)
-            .put("device", Build.DEVICE)
-            .put("buildId", Build.ID)
-            .put("incremental", Build.VERSION.INCREMENTAL)
-            .put("sdk", Build.VERSION.SDK_INT)
-            .put("fingerprint", Build.FINGERPRINT)
-            .put("probes", only?.joinToString(",") ?: Probe.all.joinToString(",") { it.name })
-            .put("halLogTags", runCatching { p.activeProfiles.flatMap { it.logTags }.distinct().joinToString(",") }.getOrDefault(""))
-        if (Build.VERSION.SDK_INT >= 31) info.put("soc", "${Build.SOC_MANUFACTURER} ${Build.SOC_MODEL}")
-        File(dir, "run.json").writeText(info.toString(2))
+        private const val KEY_SELECTED = "selected"
     }
 }

@@ -19,6 +19,8 @@ import java.io.FileInputStream
  */
 object LibrariesProbe : Probe {
     override val name = "libraries"
+    override val summary = "Shared and native libraries the ROM ships, and which load"
+    override val opensCamera = false
 
     private val INTERESTING = Regex("camera|cam|isp|image|imaging|photo|vision|jpeg|jpg|hdr|night|bokeh|depth|ai|ml|nn|npu|tpu|dsp|gpu|opencl|vulkan|neuron|apu|hexagon|snpe|qnn|edgetpu|gxp|aion|eden|enn", RegexOption.IGNORE_CASE)
 

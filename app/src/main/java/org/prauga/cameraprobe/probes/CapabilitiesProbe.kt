@@ -24,6 +24,8 @@ import org.prauga.cameraprobe.Report
  */
 object CapabilitiesProbe : Probe {
     override val name = "capabilities"
+    override val summary = "What each camera supports, and its processing tier"
+    override val opensCamera = false
 
     private val CAPABILITIES = listOf(
         "BACKWARD_COMPATIBLE", "MANUAL_SENSOR", "MANUAL_POST_PROCESSING", "RAW", "PRIVATE_REPROCESSING",
