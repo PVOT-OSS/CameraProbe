@@ -47,6 +47,8 @@ remote="/storage/emulated/$user/Android/data/$PKG/files/latest"
 
 adb install --user "$user" -r -g "$ROOT/app/build/outputs/apk/debug/app-debug.apk" >/dev/null
 adb shell am force-stop --user "$user" "$PKG"
+# The last run's report already ends in DONE: remove it so the wait below sees only the new run.
+adb shell rm -rf "$remote"
 adb logcat -G 16M >/dev/null 2>&1 || true
 adb logcat -c
 
