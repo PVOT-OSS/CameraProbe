@@ -51,7 +51,8 @@ adb logcat -G 16M >/dev/null 2>&1 || true
 adb logcat -c
 
 tmp=$(mktemp -d)
-adb logcat -v threadtime >"$tmp/logcat.txt" &
+# exec, so $! is adb itself and not a subshell that kill would leave adb running behind.
+( exec "$ADB_BIN" ${serial:+-s "$serial"} logcat -v threadtime >"$tmp/logcat.txt" ) &
 logcat_pid=$!
 trap 'kill $logcat_pid 2>/dev/null || true; rm -rf "$tmp"' EXIT
 
