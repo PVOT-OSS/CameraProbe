@@ -13,6 +13,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.CheckBox
@@ -44,6 +45,7 @@ class ProbeActivity : Activity(), ProbeRun.Listener {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setContentView(R.layout.activity_probe)
+        drawEdgeToEdge(findViewById(R.id.root))
         probeScroll = findViewById(R.id.probeScroll)
         logScroll = findViewById(R.id.logScroll)
         log = findViewById(R.id.log)
@@ -102,6 +104,34 @@ class ProbeActivity : Activity(), ProbeRun.Listener {
         val only = intent.getStringExtra("only")?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() }?.toSet()
         if (only != null || intent.getBooleanExtra("autorun", false)) {
             requestRun(Probe.all.filter { only == null || it.name in only })
+        }
+    }
+
+    /** Draw behind the system bars and keep the content clear of them (the default from API 35). */
+    private fun drawEdgeToEdge(root: View) {
+        if (Build.VERSION.SDK_INT >= 30) {
+            window.setDecorFitsSystemWindows(false)
+        } else {
+            @Suppress("DEPRECATION")
+            root.systemUiVisibility = root.systemUiVisibility or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        }
+        val left = root.paddingLeft
+        val top = root.paddingTop
+        val right = root.paddingRight
+        val bottom = root.paddingBottom
+        root.setOnApplyWindowInsetsListener { view, insets ->
+            if (Build.VERSION.SDK_INT >= 30) {
+                val bars = insets.getInsets(WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout())
+                view.setPadding(left + bars.left, top + bars.top, right + bars.right, bottom + bars.bottom)
+            } else {
+                @Suppress("DEPRECATION")
+                view.setPadding(
+                    left + insets.systemWindowInsetLeft, top + insets.systemWindowInsetTop,
+                    right + insets.systemWindowInsetRight, bottom + insets.systemWindowInsetBottom,
+                )
+            }
+            insets
         }
     }
 

@@ -5,22 +5,32 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
 
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/app_name"
+        android:textAppearance="@android:style/TextAppearance.Material.Headline" />
+
+    <TextView
         android:id="@+id/device"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:layout_marginTop="4dp"
+        android:textAppearance="@android:style/TextAppearance.Material.Body1"
+        android:textColor="@color/on_surface_variant" />
 
     <ScrollView
         android:id="@+id/probeScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_weight="1">
 
         <LinearLayout
@@ -34,8 +44,10 @@
         android:id="@+id/logScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_weight="1"
+        android:background="@drawable/panel"
+        android:padding="12dp"
         android:visibility="gone">
 
         <TextView
@@ -56,6 +68,7 @@
 
         <Button
             android:id="@+id/run"
+            style="@android:style/Widget.Material.Button.Colored"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -63,6 +76,7 @@
 
         <Button
             android:id="@+id/probes"
+            style="@android:style/Widget.Material.Button.Borderless.Colored"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -70,6 +84,7 @@
 
         <Button
             android:id="@+id/export"
+            style="@android:style/Widget.Material.Button.Borderless.Colored"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -77,6 +92,7 @@
 
         <Button
             android:id="@+id/share"
+            style="@android:style/Widget.Material.Button.Borderless.Colored"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
