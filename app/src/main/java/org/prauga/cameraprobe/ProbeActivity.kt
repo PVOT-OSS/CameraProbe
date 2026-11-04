@@ -23,16 +23,36 @@ import java.io.File
  * `am start -n org.prauga.cameraprobe/.ProbeActivity --es only env,vendor,zoom`
  */
 class ProbeActivity : Activity() {
+    private lateinit var text: TextView
+    private lateinit var scroll: ScrollView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        val text = TextView(this).apply {
+        text = TextView(this).apply {
             textSize = 10f
             setTextIsSelectable(true)
         }
-        val scroll = ScrollView(this).apply { addView(text) }
+        scroll = ScrollView(this).apply { addView(text) }
         setContentView(scroll)
 
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(Manifest.permission.CAMERA), REQUEST_CAMERA)
+            return
+        }
+        startRun()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        if (requestCode != REQUEST_CAMERA) return
+        if (grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
+            startRun()
+        } else {
+            text.append("The camera permission is needed to probe the cameras.\n")
+        }
+    }
+
+    private fun startRun() {
         val dir = File(getExternalFilesDir(null), "latest").apply {
             deleteRecursively()
             mkdirs()
@@ -42,12 +62,6 @@ class ProbeActivity : Activity() {
                 text.append(line + "\n")
                 scroll.post { scroll.fullScroll(ScrollView.FOCUS_DOWN) }
             }
-        }
-
-        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            report.line("CAMERA permission missing: adb shell pm grant $packageName android.permission.CAMERA")
-            report.line("DONE")
-            return
         }
 
         val only = intent.getStringExtra("only")?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() }?.toSet()
@@ -61,6 +75,10 @@ class ProbeActivity : Activity() {
             p.close()
             report.line("DONE")
         }.start()
+    }
+
+    companion object {
+        private const val REQUEST_CAMERA = 1
     }
 
     /** Machine-readable run identity: the host script names the result folder from it. */
