@@ -67,5 +67,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/probes" />
+
+        <Button
+            android:id="@+id/export"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/export" />
     </LinearLayout>
 </LinearLayout>

@@ -31,6 +31,7 @@ class ProbeActivity : Activity(), ProbeRun.Listener {
     private lateinit var log: TextView
     private lateinit var run: Button
     private lateinit var probes: Button
+    private lateinit var export: Button
     private val boxes = mutableMapOf<String, CheckBox>()
     private var pending: List<Probe> = emptyList()
 
@@ -45,6 +46,7 @@ class ProbeActivity : Activity(), ProbeRun.Listener {
         log = findViewById(R.id.log)
         run = findViewById(R.id.run)
         probes = findViewById(R.id.probes)
+        export = findViewById(R.id.export)
 
         findViewById<TextView>(R.id.device).text = buildString {
             append("${Build.MANUFACTURER} ${Build.MODEL} (${Build.DEVICE}), Android ${Build.VERSION.RELEASE} / API ${Build.VERSION.SDK_INT}")
@@ -68,6 +70,13 @@ class ProbeActivity : Activity(), ProbeRun.Listener {
 
         run.setOnClickListener { requestRun(Probe.all.filter { boxes[it.name]?.isChecked == true }) }
         probes.setOnClickListener { showLog(false) }
+        export.setOnClickListener {
+            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
+                .addCategory(Intent.CATEGORY_OPENABLE)
+                .setType("application/zip")
+                .putExtra(Intent.EXTRA_TITLE, ResultsArchive.baseName(ProbeRun.resultsDir(this)) + ".zip")
+            startActivityForResult(intent, REQUEST_EXPORT)
+        }
 
         ProbeRun.listener = this
         if (ProbeRun.running || ProbeRun.hasResults(this)) {
@@ -126,6 +135,21 @@ class ProbeActivity : Activity(), ProbeRun.Listener {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode != REQUEST_EXPORT || resultCode != RESULT_OK) return
+        val uri = data?.data ?: return
+        val dir = ProbeRun.resultsDir(this)
+        Thread {
+            val error = runCatching {
+                contentResolver.openOutputStream(uri)!!.use { ResultsArchive.write(dir, it) }
+            }.exceptionOrNull()
+            runOnUiThread {
+                val message = error?.let { getString(R.string.export_failed, it.message) } ?: getString(R.string.exported)
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+            }
+        }.start()
+    }
+
     override fun onLine(line: String) {
         log.append(line + "\n")
         logScroll.post { logScroll.fullScroll(ScrollView.FOCUS_DOWN) }
@@ -144,10 +168,12 @@ class ProbeActivity : Activity(), ProbeRun.Listener {
         run.isEnabled = !running
         run.setText(if (running) R.string.running else R.string.run)
         probes.isEnabled = !running && logScroll.visibility == View.VISIBLE
+        export.isEnabled = ProbeRun.hasResults(this)
     }
 
     companion object {
         private const val REQUEST_CAMERA = 1
+        private const val REQUEST_EXPORT = 2
         private const val KEY_SELECTED = "selected"
     }
 }
