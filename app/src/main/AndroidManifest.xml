@@ -69,6 +69,7 @@
 
         <activity
             android:name=".ProbeActivity"
+            android:launchMode="singleTop"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

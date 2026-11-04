@@ -57,7 +57,7 @@ logcat_pid=$!
 trap 'kill $logcat_pid 2>/dev/null || true; rm -rf "$tmp"' EXIT
 
 adb shell input keyevent KEYCODE_WAKEUP
-adb shell am start --user "$user" -n "$PKG/.ProbeActivity" --ez autorun true ${probes:+--es only "$probes"} >/dev/null
+adb shell am start --user "$user" --activity-clear-task -n "$PKG/.ProbeActivity" --ez autorun true ${probes:+--es only "$probes"} >/dev/null
 echo "running${probes:+ $probes} on $(adb shell getprop ro.product.model | tr -d '\r')..."
 
 waited=0

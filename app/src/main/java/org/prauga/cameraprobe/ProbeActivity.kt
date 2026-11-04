@@ -26,7 +26,7 @@ import java.io.File
 
 /**
  * Pick the probes and run them; the run itself lives in [ProbeRun].
- * From a host: `am start -n org.prauga.cameraprobe/.ProbeActivity --ez autorun true [--es only env,vendor,zoom]`
+ * From a host: `am start --activity-clear-task -n org.prauga.cameraprobe/.ProbeActivity --ez autorun true [--es only env,vendor,zoom]`
  */
 class ProbeActivity : Activity(), ProbeRun.Listener {
     private lateinit var probePage: View
