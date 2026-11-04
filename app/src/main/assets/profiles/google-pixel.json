@@ -1,6 +1,6 @@
 {
   "name": "google-pixel",
-  "notes": "Pixel 'Lyric' HAL (Tensor). Verified on Pixel 9 / CP3A.261005.005: IsCameraApp1P=1 makes the HAL treat the session as the first-party camera app (is_1p_camera_app=1).",
+  "notes": "Pixel 'Lyric' HAL (Tensor). Verified on Pixel 9 / CP3A.261005.005 and Pixel 10 / CP2A.260605.016: IsCameraApp1P=1 makes the HAL treat the session as the first-party camera app (is_1p_camera_app=1).",
   "tagPrefixes": ["com.google.internal.", "com.google.pixel.experimental"],
   "halLogTags": ["Lyric"],
   "abFlags": [
