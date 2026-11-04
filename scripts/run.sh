@@ -49,6 +49,14 @@ adb install --user "$user" -r -g "$ROOT/app/build/outputs/apk/debug/app-debug.ap
 adb shell am force-stop --user "$user" "$PKG"
 # The last run's report already ends in DONE: remove it so the wait below sees only the new run.
 adb shell rm -rf "$remote"
+# Behind the lock screen every camera open fails with "disabled by policy".
+adb shell input keyevent KEYCODE_WAKEUP
+adb shell wm dismiss-keyguard >/dev/null 2>&1 || true
+sleep 1
+if adb shell dumpsys window | tr -d '\r' | grep -q 'isKeyguardShowing=true'; then
+    echo "unlock the phone first: cameras can't be opened behind the lock screen" >&2
+    exit 1
+fi
 adb logcat -G 16M >/dev/null 2>&1 || true
 adb logcat -c
 
