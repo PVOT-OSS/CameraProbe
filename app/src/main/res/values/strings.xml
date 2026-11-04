@@ -14,5 +14,7 @@
     <string name="export">Export</string>
     <string name="exported">Results exported</string>
     <string name="export_failed">Export failed: %1$s</string>
+    <string name="share">Share</string>
+    <string name="share_subject">Camera Probe results: %1$s</string>
     <string name="permission_needed">The camera permission is needed to probe the cameras.</string>
 </resources>

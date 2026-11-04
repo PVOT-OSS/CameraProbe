@@ -7,6 +7,7 @@ package org.prauga.cameraprobe
 
 import android.Manifest
 import android.app.Activity
+import android.content.ClipData
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -20,6 +21,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import org.prauga.cameraprobe.probes.Probe
+import java.io.File
 
 /**
  * Pick the probes and run them; the run itself lives in [ProbeRun].
@@ -32,6 +34,7 @@ class ProbeActivity : Activity(), ProbeRun.Listener {
     private lateinit var run: Button
     private lateinit var probes: Button
     private lateinit var export: Button
+    private lateinit var share: Button
     private val boxes = mutableMapOf<String, CheckBox>()
     private var pending: List<Probe> = emptyList()
 
@@ -47,6 +50,7 @@ class ProbeActivity : Activity(), ProbeRun.Listener {
         run = findViewById(R.id.run)
         probes = findViewById(R.id.probes)
         export = findViewById(R.id.export)
+        share = findViewById(R.id.share)
 
         findViewById<TextView>(R.id.device).text = buildString {
             append("${Build.MANUFACTURER} ${Build.MODEL} (${Build.DEVICE}), Android ${Build.VERSION.RELEASE} / API ${Build.VERSION.SDK_INT}")
@@ -77,6 +81,7 @@ class ProbeActivity : Activity(), ProbeRun.Listener {
                 .putExtra(Intent.EXTRA_TITLE, ResultsArchive.baseName(ProbeRun.resultsDir(this)) + ".zip")
             startActivityForResult(intent, REQUEST_EXPORT)
         }
+        share.setOnClickListener { shareResults() }
 
         ProbeRun.listener = this
         if (ProbeRun.running || ProbeRun.hasResults(this)) {
@@ -150,6 +155,34 @@ class ProbeActivity : Activity(), ProbeRun.Listener {
         }.start()
     }
 
+    private fun shareResults() {
+        val dir = ProbeRun.resultsDir(this)
+        val shareDir = ResultsProvider.shareDir(this)
+        Thread {
+            val result = runCatching {
+                shareDir.deleteRecursively()
+                shareDir.mkdirs()
+                val name = ResultsArchive.baseName(dir)
+                val zip = File(shareDir, "$name.zip")
+                zip.outputStream().use { ResultsArchive.write(dir, it) }
+                name to ResultsProvider.uri(zip)
+            }
+            runOnUiThread {
+                result.onSuccess { (name, uri) ->
+                    val intent = Intent(Intent.ACTION_SEND)
+                        .setType("application/zip")
+                        .putExtra(Intent.EXTRA_STREAM, uri)
+                        .putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject, name))
+                        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    intent.clipData = ClipData.newRawUri(name, uri)
+                    startActivity(Intent.createChooser(intent, getString(R.string.share)))
+                }.onFailure {
+                    Toast.makeText(this, getString(R.string.export_failed, it.message), Toast.LENGTH_LONG).show()
+                }
+            }
+        }.start()
+    }
+
     override fun onLine(line: String) {
         log.append(line + "\n")
         logScroll.post { logScroll.fullScroll(ScrollView.FOCUS_DOWN) }
@@ -169,6 +202,7 @@ class ProbeActivity : Activity(), ProbeRun.Listener {
         run.setText(if (running) R.string.running else R.string.run)
         probes.isEnabled = !running && logScroll.visibility == View.VISIBLE
         export.isEnabled = ProbeRun.hasResults(this)
+        share.isEnabled = export.isEnabled
     }
 
     companion object {

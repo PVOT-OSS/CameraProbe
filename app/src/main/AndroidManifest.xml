@@ -61,6 +61,12 @@
         <uses-native-library android:name="libsdsprpc.so" android:required="false" />
         <uses-native-library android:name="libqdMetaData.so" android:required="false" />
 
+        <provider
+            android:name=".ResultsProvider"
+            android:authorities="org.prauga.cameraprobe.results"
+            android:exported="false"
+            android:grantUriPermissions="true" />
+
         <activity
             android:name=".ProbeActivity"
             android:exported="true"

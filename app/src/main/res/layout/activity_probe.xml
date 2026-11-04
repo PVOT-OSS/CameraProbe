@@ -74,5 +74,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/export" />
+
+        <Button
+            android:id="@+id/share"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/share" />
     </LinearLayout>
 </LinearLayout>
