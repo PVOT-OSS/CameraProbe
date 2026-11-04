@@ -44,7 +44,7 @@ object KeysProbe : Probe {
                 dump("characteristics", c.keys.map { it.name })
                 dump("request", c.availableCaptureRequestKeys.map { it.name })
                 dump("result", c.availableCaptureResultKeys.map { it.name })
-                dump("session", c.availableSessionKeys.map { it.name })
+                dump("session", c.availableSessionKeys.orEmpty().map { it.name })
                 dump("physicalRequest", c.availablePhysicalCameraRequestKeys?.map { it.name }.orEmpty())
                 sb.append("## vendor characteristic values\n")
                 c.keys.filterNot { it.name.startsWith("android.") }.forEach {

@@ -45,7 +45,7 @@ class ProbeContext(val context: Context, val r: Report) {
         allIds.flatMap { id ->
             val c = chars(id)
             c.keys.map { it.name } + c.availableCaptureRequestKeys.map { it.name } +
-                c.availableCaptureResultKeys.map { it.name } + c.availableSessionKeys.map { it.name }
+                c.availableCaptureResultKeys.map { it.name } + c.availableSessionKeys.orEmpty().map { it.name }
         }.filterNot { it.startsWith("android.") }.toSortedSet()
     }
 
