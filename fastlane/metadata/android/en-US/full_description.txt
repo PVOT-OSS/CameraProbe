@@ -1,0 +1,26 @@
+Camera Probe finds out what your phone's camera system lets a regular app use. Stock camera apps get special access to the hardware; Camera Probe shows what any camera app from a store can actually reach on your device, model and Android version.
+
+What it checks
+• Every camera, including the physical lenses behind each logical camera
+• Hardware level, RAW, manual sensor and post-processing control, burst, 10-bit and stream use cases
+• A processing tier for each camera, A, B or C, from what it supports
+• Stream sizes and formats, zoom ranges, multi-resolution and depth outputs
+• Every metadata key and the vendor tags the manufacturer adds
+• Camera2 extensions such as Night, HDR and Bokeh
+• Shared and native libraries and accelerators your phone's software makes available to apps
+• Burst, JPEG, reprocessing and vendor capture tests, with timings
+
+How it works
+• Choose the probes and tap Run; the ones that open the camera say so
+• Follow the log as it runs, then read a summary of every camera
+• Export the results as a zip to any folder, or share it with any app
+• Test photos never go into the zip
+• Built-in profiles for Google, Qualcomm, MediaTek, Samsung, Unisoc, OPPO/OnePlus, vivo, Xiaomi, ASUS, Motorola, Sony and Huawei/Honor phones
+
+Useful for camera app developers, custom ROM makers and anyone curious about their phone.
+
+Private and open
+• No ads, no accounts, no tracking
+• No internet permission: results leave your phone only when you export or share them
+• Only the camera permission
+• Free and open source under the Apache-2.0 licence: github.com/PVOT-OSS/CameraProbe
