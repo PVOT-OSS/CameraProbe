@@ -10,6 +10,10 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+val versionMajor = 1
+val versionMinor = 1
+val versionPatch = 0
+
 android {
     namespace = "org.prauga.cameraprobe"
     compileSdk = 36
@@ -19,8 +23,8 @@ android {
         // Android 9: SessionConfiguration, physical cameras and session keys all exist from here.
         minSdk = 28
         targetSdk = 36
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = versionMajor * 10000 + versionMinor * 100 + versionPatch
+        versionName = "$versionMajor.$versionMinor.$versionPatch"
     }
 
     compileOptions {
