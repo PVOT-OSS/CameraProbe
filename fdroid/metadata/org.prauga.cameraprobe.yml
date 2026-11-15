@@ -1,0 +1,37 @@
+# SPDX-FileCopyrightText: Saalim Quadri <danascape@gmail.com>
+# SPDX-License-Identifier: Apache-2.0
+
+PackageName: org.prauga.cameraprobe
+Name: Camera Probe
+Summary: See what your phone's cameras let apps use
+License: Apache-2.0
+AuthorName: Saalim Quadri
+SourceCode: https://github.com/PVOT-OSS/CameraProbe
+IssueTracker: https://github.com/PVOT-OSS/CameraProbe/issues
+WebSite: ""
+Categories:
+  - Development
+  - System
+Description: |
+  Camera Probe finds out what your phone's camera system lets a regular
+  app use: every camera and lens, RAW and manual controls, a processing
+  tier per camera, stream sizes, zoom ranges, metadata keys and vendor
+  tags, Camera2 extensions, and the libraries and accelerators the phone
+  makes available to apps. Choose the probes, tap Run, read the summary,
+  then export or share the results as a zip (test photos are never
+  included). Camera Probe has no ads, accounts or tracking, and no
+  internet permission.
+
+RepoType: git
+Repo: https://github.com/PVOT-OSS/CameraProbe.git
+
+Builds:
+  - versionName: 1.1.0
+    versionCode: 10100
+    commit: v1.1.0
+    subdir: app
+    gradle:
+      - yes
+
+CurrentVersion: "1.1.0"
+CurrentVersionCode: 10100
